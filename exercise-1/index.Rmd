@@ -1,0 +1,42 @@
+---
+output: html_document
+---
+
+```{r, echo=FALSE, message=FALSE}
+
+library(plotly)
+
+# Code taken from https://plot.ly/r/choropleth-maps/
+df <- read.csv("https://raw.githubusercontent.com/plotly/datasets/master/2011_us_ag_exports.csv")
+df$hover <- with(df, paste(state, '<br>', "Beef", beef, "Dairy", dairy, "<br>",
+                           "Fruits", total.fruits, "Veggies", total.veggies,
+                           "<br>", "Wheat", wheat, "Corn", corn))
+
+# give state boundaries a white border
+l <- list(color = toRGB("white"), width = 2)
+# specify some map projection/options
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+p <- plot_geo(df, locationmode = 'USA-states') %>%
+  add_trace(
+    z = ~total.exports, text = ~hover, locations = ~code,
+    color = ~total.exports, colors = 'Purples'
+  ) %>%
+  colorbar(title = "Millions USD") %>%
+  layout(
+    title = '2011 US Agriculture Exports by State<br>(Hover for breakdown)',
+    geo = g
+  )
+
+```
+
+## Plot of US Agrigulture Exports
+
+The following is a plot of the US's agricultural exports by state in 2011, taken from [the plotly documentation](https://plot.ly/r/choropleth-maps/).
+
+`r p`
