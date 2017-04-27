@@ -1,0 +1,30 @@
+---
+output: html_document
+---
+
+```{r, echo=FALSE, message=FALSE}
+library(plotly)
+library(dplyr)
+cars <- data.frame(mtcars)
+
+p <- plot_ly(cars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers", color = ~cyl,
+             hoverinfo = 'text',
+             text = ~paste('Weight: ', wt,
+                           '</br> MPG: ', mpg)) %>%
+             layout(annotations = list( x = cars$wt,
+                                        y = cars$mpg,
+                                        text = rownames(cars),
+                                        xref = "x",
+                                        yref = "y",
+                                        showarrow = TRUE,
+                                        arrowhead = 6,
+                                        ax = 10,
+                                        ay = -10,
+                                        font = list(size = 8)))
+```
+
+# Interactive Plot
+
+The following is a plot of car weights versus their miles per gallon.
+
+`r p`
